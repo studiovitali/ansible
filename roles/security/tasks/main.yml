@@ -1,0 +1,35 @@
+---
+- name: Create SSH drop-in directory
+  ansible.builtin.file:
+    path: /etc/ssh/sshd_config.d
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+
+- name: Harden SSH configuration with drop-in template
+  ansible.builtin.template:
+    src: sshd.conf.j2
+    dest: /etc/ssh/sshd_config.d/sshd.conf
+    owner: root
+    group: root
+    mode: "0644"
+    validate: "sshd -t -f %s"
+  notify: Restart sshd
+  become: true
+
+- name: Install fail2ban
+  ansible.builtin.apt:
+    name:
+      - fail2ban
+    state: present
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
+
+- name: Start fail2ban
+  ansible.builtin.service:
+    name: fail2ban
+    state: started
+    enabled: yes
+  when: ansible_facts['os_family'] == "Debian"

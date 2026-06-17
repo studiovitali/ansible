@@ -1,0 +1,10 @@
+## galaxy.yml
+
+namespace: studio
+name: ansible
+readme: README.md
+version: 1.0.0
+authors:
+  - Studio Vitali
+description: Studio Ansible collection containing common roles
+license: MIT
