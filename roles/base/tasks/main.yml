@@ -1,0 +1,41 @@
+---
+- name: Set system timezone
+  community.general.timezone:
+    # name: "{{ base_timezone }}"
+    name: Europe/Zurich
+  become: true
+
+- name: Fully upgrade system
+  ansible.builtin.apt:
+    update_cache: true
+    upgrade: dist
+    cache_valid_time: 3600
+  when: ansible_facts['os_family'] == "Debian" ## only on Debian / Ubuntu systems
+  become: true
+
+- name: Install essential system utilities
+  ansible.builtin.apt:
+    # name: "{{ base_packages }}"
+    name:
+      - acl
+      - curl
+      - git
+      - htop
+      - rsync
+      - unzip
+      - unattended-upgrades
+    state: present
+    update_cache: true
+  when: ansible_facts['os_family'] == "Debian"
+  become: true
+#
+# - name: Enable unattended-upgrades
+#   ansible.builtin.copy:
+#     dest: /etc/apt/apt.conf.d/20auto-upgrades
+#     content: |
+#       APT::Periodic::Update-Package-Lists "1";
+#       APT::Periodic::Unattended-Upgrade "1";
+#     mode: "0644"
+#   when: ansible_facts['os_family'] == "Debian"
+
+## SCHEDULE REBOOTS 4 kernel upgrades: with cron, unattended-upgrades or action workflows?

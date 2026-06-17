@@ -1,0 +1,14 @@
+---
+## roles/base/defaults/main.yml
+
+base_timezone: "Europe/Zurich"
+base_packages:
+  - curl
+  - git
+  - htop
+  - rsync
+  - unzip
+  - unattended-upgrades
+  # - acl ## needed for Ansible to become unprivileged user
+  # - python3-pip
+  # - wget
