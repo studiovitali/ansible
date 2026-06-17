@@ -1,0 +1,11 @@
+---
+- name: Setup machines
+  hosts: all
+  become: true
+
+  roles:
+    - base
+    - users
+    - security
+    - docker
+    # - backup
