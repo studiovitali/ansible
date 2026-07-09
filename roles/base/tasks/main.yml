@@ -10,7 +10,6 @@
     update_cache: true
     upgrade: dist
     cache_valid_time: 3600
-  when: ansible_facts['os_family'] == "Debian" ## only on Debian / Ubuntu systems
   become: true
 
 - name: Install essential system utilities
@@ -26,7 +25,6 @@
       - unattended-upgrades
     state: present
     update_cache: true
-  when: ansible_facts['os_family'] == "Debian"
   become: true
 #
 # - name: Enable unattended-upgrades
