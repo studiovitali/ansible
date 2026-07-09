@@ -1,0 +1,14 @@
+# ansible/roles/backup/defaults/main.yml
+---
+## Directories to include in the backup
+backup_include_paths:
+  - /etc
+  - /opt/docker
+
+## Directories to exclude from the backup
+backup_exclude_paths: [] ## Nothing to exclude
+
+## Restic retention policy
+backup_retention_daily: 7
+backup_retention_weekly: 4
+backup_retention_monthly: 6

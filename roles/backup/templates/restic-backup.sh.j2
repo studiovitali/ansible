@@ -11,13 +11,20 @@ set -e
 
 echo "Starting Restic Backup at $(date)"
 
-## Run the backup (docker volumes & config files)
+## Run the backup using paths and exclusions defined in group_vars
 restic backup \
-  /etc \
-  /opt/docker-data \
-  --exclude /opt/docker-data/tmp \
+{% for path in backup_include_paths %}
+  "{{ path }}" \
+{% endfor %}
+{% for path in backup_exclude_paths %}
+  --exclude "{{ path }}" \
+{% endfor %}
   --cleanup-cache
 
-restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6
+restic forget \
+  --prune \
+  --keep-daily {{ backup_retention_daily }} \
+  --keep-weekly {{ backup_retention_weekly }} \
+  --keep-monthly {{ backup_retention_monthly }}
 
 echo "Restic backup completed at $(date)"
