@@ -1,0 +1,23 @@
+#!/bin/bash
+## Ansible managed
+
+## Secrets are passed via Ansible Vault variables
+export RESTIC_REPOSITORY="{{ vault_restic_repo_url }}"
+export RESTIC_PASSWORD="{{ vault_restic_password }}"
+export AWS_ACCESS_KEY_ID="{{ vault_aws_access_key }}"
+export AWS_SECRET_ACCESS_KEY="{{ vault_aws_secret_key }}"
+
+set -e
+
+echo "Starting Restic Backup at $(date)"
+
+## Run the backup (docker volumes & config files)
+restic backup \
+  /etc \
+  /opt/docker-data \
+  --exclude /opt/docker-data/tmp \
+  --cleanup-cache
+
+restic forget --prune --keep-daily 7 --keep-weekly 4 --keep-monthly 6
+
+echo "Restic backup completed at $(date)"

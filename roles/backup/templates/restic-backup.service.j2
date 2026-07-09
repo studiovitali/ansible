@@ -1,0 +1,7 @@
+[Unit]
+Description=Run Restic Backup
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/restic-backup.sh
