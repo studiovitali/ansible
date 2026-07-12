@@ -27,7 +27,7 @@
     dest: /etc/restic-backup.env
     owner: root
     group: root
-    mode: "0600" # Only root can read this file because it contains sensitive credentials
+    mode: "0600" ## only root can read this file
 
 - name: Deploy restic backup script
   ansible.builtin.template:
@@ -35,7 +35,7 @@
     dest: /usr/local/bin/restic-backup.sh
     owner: root
     group: root
-    mode: "0700" # Only root can execute this backup script
+    mode: "0700" ## only root can execute the script
 
 - name: Deploy restic systemd service
   ansible.builtin.template:
