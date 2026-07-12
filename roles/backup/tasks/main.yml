@@ -1,26 +1,56 @@
 ---
-- name: Install Restic
+- name: Install restic
   ansible.builtin.apt:
     name: restic
     state: present
-  become: true
+
+- name: Initialize restic repository
+  environment:
+    RESTIC_REPOSITORY: "{{ vault_restic_repo_url }}"
+    RESTIC_PASSWORD: "{{ vault_restic_password }}"
+    AWS_ACCESS_KEY_ID: "{{ vault_aws_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ vault_aws_secret_key }}"
+  block:
+    - name: Check if already initialized
+      ansible.builtin.command: restic snapshots
+      register: restic_check
+      failed_when: false
+      changed_when: false
+
+    - name: Initialize repository
+      ansible.builtin.command: restic init
+      when: restic_check.rc != 0
+
+- name: Deploy restic environment file
+  ansible.builtin.template:
+    src: restic-backup.env.j2
+    dest: /etc/restic-backup.env
+    owner: root
+    group: root
+    mode: "0600" # Only root can read this file because it contains sensitive credentials
 
 - name: Deploy restic backup script
   ansible.builtin.template:
     src: restic-backup.sh.j2
     dest: /usr/local/bin/restic-backup.sh
-    mode: "0700" # Only root can read/execute this because it contains secrets
+    owner: root
+    group: root
+    mode: "0700" # Only root can execute this backup script
 
 - name: Deploy restic systemd service
   ansible.builtin.template:
     src: restic-backup.service.j2
     dest: /etc/systemd/system/restic-backup.service
+    owner: root
+    group: root
     mode: "0644"
 
 - name: Deploy restic systemd timer
   ansible.builtin.template:
     src: restic-backup.timer.j2
     dest: /etc/systemd/system/restic-backup.timer
+    owner: root
+    group: root
     mode: "0644"
 
 - name: Enable and start backup timer

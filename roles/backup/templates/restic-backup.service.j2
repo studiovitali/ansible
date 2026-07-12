@@ -4,4 +4,5 @@ After=network-online.target
 
 [Service]
 Type=oneshot
+EnvironmentFile=/etc/restic-backup.env
 ExecStart=/usr/local/bin/restic-backup.sh
