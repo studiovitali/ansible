@@ -1,27 +1,27 @@
 ---
-# - name: Create primary admin user
-#   ansible.builtin.user:
-#     name: sysadmin
-#     groups: sudo
-#     append: yes
-#     shell: /bin/bash
-#     create_home: yes
-#   become: true
+- name: Create primary sysadmin user
+  ansible.builtin.user:
+    name: "{{ sysadmin_user }}"
+    groups: sudo
+    append: yes
+    shell: /bin/bash
+    create_home: yes
+  become: true
 
-# - name: Add SSH public key for sysadmin
-#   ansible.posix.authorized_key:
-#     user: sysadmin
-#     state: present
-#     key: "{{ sysadmin_public_ssh_key }}"
-#   become: true
+- name: Add SSH public key for sysadmin
+  ansible.posix.authorized_key:
+    user: "{{ sysadmin_user }}"
+    state: present
+    key: "{{ sysadmin_public_ssh_key }}"
+  become: true
 
-# - name: Allow passwordless sudo to sysadmin user
-#   ansible.builtin.copy:
-#     dest: /etc/sudoers.d/sysadmin
-#     content: "sysadmin ALL=(ALL) NOPASSWD: ALL"
-#     mode: "0440"
-#     validate: /usr/sbin/visudo -cf %s
-#   become: true
+- name: Allow passwordless sudo to sysadmin user
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/{{ sysadmin_user }}
+    content: "{{ sysadmin_user }} ALL=(ALL) NOPASSWD: ALL"
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  become: true
 
 - name: Create deployment user for CI/CD
   ansible.builtin.user:
