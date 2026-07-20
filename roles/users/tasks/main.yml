@@ -15,7 +15,7 @@
     key: "{{ sysadmin_public_ssh_key }}"
   become: true
 
-- name: Allow passwordless sudo for the sudo group
+- name: Allow passwordless sudo for sudo group
   ansible.builtin.copy:
     dest: /etc/sudoers.d/sudo-nopasswd
     content: "%sudo ALL=(ALL) NOPASSWD: ALL"
