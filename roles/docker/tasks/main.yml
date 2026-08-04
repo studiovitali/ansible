@@ -4,36 +4,20 @@
     name:
       - ca-certificates
       - curl
+      - python3-debian ## needed for the deb822 module
     state: present
     update_cache: true
   become: true
 
-- name: Ensure APT keyrings directory exists
-  ansible.builtin.file:
-    path: /etc/apt/keyrings
-    state: directory
-    mode: "0755"
-  become: true
-
-- name: Download Docker official GPG key
-  ansible.builtin.get_url:
-    url: "https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }}/gpg"
-    dest: /etc/apt/keyrings/docker.asc
-    mode: "0644"
-  become: true
-
-- name: Get system architecture
-  ansible.builtin.command: dpkg --print-architecture
-  register: dpkg_architecture
-  changed_when: false
-  become: true
-
-- name: Add Docker official APT repository
-  ansible.builtin.apt_repository:
-    repo: "deb [arch={{ dpkg_architecture.stdout }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }} {{ ansible_facts['distribution_release'] }} stable"
+- name: Add Docker official APT repository (DEB822 format)
+  ansible.builtin.deb822_repository:
+    name: docker
+    types: deb
+    uris: "https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }}"
+    suites: "{{ ansible_facts['distribution_release'] }}"
+    components: stable
+    signed_by: "https://download.docker.com/linux/{{ ansible_facts['distribution'] | lower }}/gpg"
     state: present
-    filename: docker
-    update_cache: yes
   become: true
 
 - name: Install modern Docker CE packages
@@ -77,7 +61,7 @@
     gid: 9999
   become: true
 
-- name: Create appuser user for secure container execution
+- name: Create app user for secure container execution
   ansible.builtin.user:
     name: appuser
     state: present
