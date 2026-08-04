@@ -20,7 +20,7 @@
     state: present
   become: true
 
-- name: Install modern Docker CE packages
+- name: Install Docker CE packages
   ansible.builtin.apt:
     name:
       - docker-ce
@@ -29,9 +29,10 @@
       - docker-buildx-plugin
       - docker-compose-plugin
     state: present
+    update_cache: true
   become: true
 
-- name: Ensure Docker services are running and enabled
+- name: Ensure Docker service is running and enabled
   ansible.builtin.service:
     name: docker
     state: started
