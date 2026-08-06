@@ -1,22 +1,10 @@
 ---
-- name: Create SSH drop-in directory
-  ansible.builtin.file:
-    path: /etc/ssh/sshd_config.d
-    state: directory
-    owner: root
-    group: root
-    mode: "0755"
-  become: true
-
-- name: Harden SSH configuration with drop-in template
-  ansible.builtin.template:
-    src: sshd.conf.j2
-    dest: /etc/ssh/sshd_config.d/sshd.conf
-    owner: root
-    group: root
-    mode: "0644"
-  notify: Restart sshd
-  become: true
+- name: Harden SSH configuration
+  ansible.builtin.import_role:
+    name: devsec.hardening.ssh_hardening
+  vars:
+    ssh_permit_root_login: "no"
+    ssh_password_authentication: "no"
 
 - name: Install fail2ban
   ansible.builtin.apt:

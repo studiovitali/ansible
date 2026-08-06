@@ -9,3 +9,6 @@ authors:
 description: Studio Ansible collection containing common roles
 license:
   - MIT
+
+dependencies:
+  "devsec.hardening": ">=9.0.0"
