@@ -35,5 +35,3 @@
 #       APT::Periodic::Unattended-Upgrade "1";
 #     mode: "0644"
 #   when: ansible_facts['os_family'] == "Debian"
-
-## SCHEDULE REBOOTS 4 kernel upgrades: with cron, unattended-upgrades or action workflows?
