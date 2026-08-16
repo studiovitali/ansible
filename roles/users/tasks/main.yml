@@ -29,6 +29,7 @@
     shell: /bin/bash
     create_home: yes
   become: true
+  when: deployment_public_ssh_key is defined
 
 - name: Add SSH public key for deployment user
   ansible.posix.authorized_key:
@@ -36,3 +37,4 @@
     state: present
     key: "{{ deployment_public_ssh_key }}"
   become: true
+  when: deployment_public_ssh_key is defined
