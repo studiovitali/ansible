@@ -39,6 +39,7 @@
         enabled: true
 
 - name: Configure deployment user for Docker
+  when: deployment_public_ssh_key is defined
   become: true
   block:
     - name: Add user to docker group
