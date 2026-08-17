@@ -1,42 +1,14 @@
 ---
-- name: Set up primary sysadmin user
-  when: deployment_public_ssh_key is defined
-  become: true
-  block:
-    - name: Create user
-      ansible.builtin.user:
-        name: "{{ sysadmin_user }}"
-        groups: sudo
-        append: yes
-        shell: /bin/bash
-        create_home: yes
+- name: Configure sysadmin user
+  ansible.builtin.import_tasks: sysadmin.yml
+  when: users_setup_sysadmin | bool
 
-    - name: Add SSH public key
-      ansible.posix.authorized_key:
-        user: "{{ sysadmin_user }}"
-        state: present
-        key: "{{ sysadmin_public_ssh_key }}"
+- name: Configure deployment user
+  ansible.builtin.import_tasks: deployment.yml
+  when: users_setup_deployment | bool
 
-    - name: Allow passwordless sudo
-      ansible.builtin.copy:
-        dest: /etc/sudoers.d/sudo-nopasswd
-        content: "%sudo ALL=(ALL) NOPASSWD: ALL"
-        mode: "0440"
-        validate: /usr/sbin/visudo -cf %s
-
-
-- name: Set up deployment user for CI/CD
-  when: deployment_public_ssh_key is defined
-  become: true
-  block:
-    - name: Create user
-      ansible.builtin.user:
-        name: deployment
-        shell: /bin/bash
-        create_home: yes
-
-    - name: Add SSH public key
-      ansible.posix.authorized_key:
-        user: deployment
-        state: present
-        key: "{{ deployment_public_ssh_key }}"
+# opt in to feature flags / tasks with:
+# roles:
+#   - role: studio.ansible.users
+#     vars:
+#       users_setup_deployment: true

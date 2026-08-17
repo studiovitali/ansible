@@ -1,0 +1,14 @@
+---
+- name: Create deployment user for CI/CD
+  ansible.builtin.user:
+    name: deployment
+    shell: /bin/bash
+    create_home: yes
+  become: true
+
+- name: Add SSH public key for deployment user
+  ansible.posix.authorized_key:
+    user: deployment
+    state: present
+    key: "{{ deployment_public_ssh_key }}"
+  become: true

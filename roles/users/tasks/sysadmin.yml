@@ -1,0 +1,24 @@
+---
+- name: Create primary sysadmin user
+  ansible.builtin.user:
+    name: "{{ sysadmin_user }}"
+    groups: sudo
+    append: yes
+    shell: /bin/bash
+    create_home: yes
+  become: true
+
+- name: Add SSH public key for sysadmin
+  ansible.posix.authorized_key:
+    user: "{{ sysadmin_user }}"
+    state: present
+    key: "{{ sysadmin_public_ssh_key }}"
+  become: true
+
+- name: Allow passwordless sudo for sudo group
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/sudo-nopasswd
+    content: "%sudo ALL=(ALL) NOPASSWD: ALL"
+    mode: "0440"
+    validate: /usr/sbin/visudo -cf %s
+  become: true
