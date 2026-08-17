@@ -1,0 +1,11 @@
+---
+coolify_installer_url: "https://cdn.coollabs.io/coolify/install.sh"
+coolify_installer_dest: "/tmp/coolify-install.sh"
+coolify_data_dir: "/data/coolify"
+coolify_compose_file: "{{ coolify_data_dir }}/source/docker-compose.yml"
+
+## Pin to a release (e.g. "v4.0.0") or leave empty for latest.
+coolify_version: ""
+
+## Coolify self-updates by default; set false to manage upgrades yourself.
+coolify_autoupdate: true

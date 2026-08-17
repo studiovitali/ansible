@@ -1,0 +1,25 @@
+---
+- name: Check if Coolify is already installed
+  ansible.builtin.stat:
+    path: "{{ coolify_compose_file }}"
+  register: coolify_installed
+
+- name: Download Coolify installer
+  ansible.builtin.get_url:
+    url: "{{ coolify_installer_url }}"
+    dest: "{{ coolify_installer_dest }}"
+    mode: "0755"
+  when: not coolify_installed.stat.exists
+
+- name: Run Coolify installer
+  become: true
+  ansible.builtin.command:
+    argv:
+      - "{{ coolify_installer_dest }}"
+      - "{{ coolify_version }}"
+  environment:
+    AUTOUPDATE: "{{ coolify_autoupdate | bool | ternary('true', 'false') }}"
+  when: not coolify_installed.stat.exists
+  changed_when: true
+  async: 1800
+  poll: 15
