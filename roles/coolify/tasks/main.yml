@@ -19,7 +19,11 @@
       - "{{ coolify_version }}"
   environment:
     AUTOUPDATE: "{{ coolify_autoupdate | bool | ternary('true', 'false') }}"
+    ROOT_USERNAME: "{{ coolify_root_username }}"
+    ROOT_USER_EMAIL: "{{ coolify_root_user_email }}"
+    ROOT_USER_PASSWORD: "{{ coolify_root_user_password }}"
   when: not coolify_installed.stat.exists
   changed_when: true
   async: 1800
   poll: 15
+  no_log: true

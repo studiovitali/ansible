@@ -4,8 +4,13 @@ coolify_installer_dest: "/tmp/coolify-install.sh"
 coolify_data_dir: "/data/coolify"
 coolify_compose_file: "{{ coolify_data_dir }}/source/docker-compose.yml"
 
-## Pin to a release (e.g. "v4.0.0") or leave empty for latest.
+## Pin to a release or leave empty for latest
 coolify_version: ""
 
-## Coolify self-updates by default; set false to manage upgrades yourself.
+## Set to false to manage upgrades manually
 coolify_autoupdate: true
+
+## All 3 needed for sucessful user creation
+coolify_root_username: ""
+coolify_root_user_email: ""
+coolify_root_user_password: ""
