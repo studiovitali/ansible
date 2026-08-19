@@ -1,5 +1,6 @@
 ---
 - name: Check if Coolify is already installed
+  become: true
   ansible.builtin.stat:
     path: "{{ coolify_compose_file }}"
   register: coolify_installed
