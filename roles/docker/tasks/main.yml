@@ -42,7 +42,7 @@
   when: deployment_public_ssh_key is defined
   become: true
   block:
-    - name: Add user to docker group
+    - name: Add deployment user to docker group
       ansible.builtin.user:
         name: deployment
         groups: docker
@@ -65,7 +65,7 @@
         state: present
         gid: 9999
 
-    - name: Create user
+    - name: Create appuser
       ansible.builtin.user:
         name: appuser
         state: present

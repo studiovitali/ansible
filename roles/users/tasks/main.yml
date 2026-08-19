@@ -1,9 +1,9 @@
 ---
 - name: Set up primary sysadmin user
-  when: deployment_public_ssh_key is defined
+  when: sysadmin_public_ssh_key is defined
   become: true
   block:
-    - name: Create user
+    - name: Create sysadmin user
       ansible.builtin.user:
         name: "{{ sysadmin_user }}"
         groups: sudo
@@ -29,7 +29,7 @@
   when: deployment_public_ssh_key is defined
   become: true
   block:
-    - name: Create user
+    - name: Create deployment user
       ansible.builtin.user:
         name: deployment
         shell: /bin/bash
