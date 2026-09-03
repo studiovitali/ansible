@@ -36,13 +36,15 @@
 #     mode: "0644"
 #   when: ansible_facts['os_family'] == "Debian"
 
-- name: Check if reboot is required
-  ansible.builtin.stat:
-    path: /var/run/reboot-required
-  register: reboot_required_file
+- name: Reboot system if required
+  block:
+    - name: Check if reboot is required
+      ansible.builtin.stat:
+        path: /var/run/reboot-required
+      register: reboot_required_file
 
-- name: Reboot host if necessary
-  ansible.builtin.reboot:
-    post_reboot_delay: 10
-  become: true
-  when: reboot_required_file.stat.exists
+    - name: Reboot host if necessary
+      become: true
+      ansible.builtin.reboot:
+        post_reboot_delay: 10
+      when: reboot_required_file.stat.exists
