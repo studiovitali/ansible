@@ -1,0 +1,17 @@
+---
+galaxy_info:
+  author: Studio Vitali
+  description: Installs Docker Engine on Debian.
+  license: MIT
+  min_ansible_version: "2.15"
+  platforms:
+    - name: Debian
+      versions:
+        - bookworm
+        - trixie
+  galaxy_tags:
+    - docker
+    - container
+
+dependencies: []
+allow_duplicates: true
