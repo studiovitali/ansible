@@ -3,8 +3,9 @@
 namespace: studio
 name: ansible
 readme: README.md
-version: 1.0.0
+version: 0.0.1
 authors:
   - Studio Vitali
 description: Studio Ansible collection containing common roles
-license: MIT
+license:
+  - MIT
