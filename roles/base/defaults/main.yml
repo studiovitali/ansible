@@ -9,6 +9,6 @@ base_packages:
   - rsync
   - unzip
   - unattended-upgrades
-  # - acl ## needed for Ansible to become unprivileged user
+  # - acl ## needed for ansible to become unprivileged user
   # - python3-pip
   # - wget
