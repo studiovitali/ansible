@@ -1,19 +1,20 @@
 ---
 - name: Set system timezone
+  become: true
   community.general.timezone:
     # name: "{{ base_timezone }}"
     name: Europe/Zurich
-  become: true
 
 - name: Fully upgrade system
+  become: true
   ansible.builtin.apt:
     update_cache: true
     upgrade: dist
     cache_valid_time: 3600
-  become: true
   notify: Reboot system
 
 - name: Install essential system utilities
+  become: true
   ansible.builtin.apt:
     # name: "{{ base_packages }}"
     name:
@@ -26,7 +27,6 @@
       - unattended-upgrades
     state: present
     update_cache: true
-  become: true
 
 # - name: Enable unattended-upgrades
 #   ansible.builtin.copy:
