@@ -3,11 +3,7 @@
 
 set -e
 
-# Source environment variables if running manually/outside Systemd
-if [ -f /etc/restic-backup.env ]; then
-  # shellcheck source=/dev/null
-  . /etc/restic-backup.env
-fi
+## Environment is injected by the systemd unit via EnvironmentFile=/etc/restic-backup.env. Run manually with: systemctl start restic-backup.service
 
 echo "Starting Restic Backup at $(date)"
 
