@@ -17,6 +17,7 @@
         owner: root
         group: root
         mode: "0644"
+        validate: /usr/sbin/sshd -t -f %s
       notify: Restart sshd
 
 - name: Enable fail2ban
@@ -32,4 +33,4 @@
       ansible.builtin.service:
         name: fail2ban
         state: started
-        enabled: yes
+        enabled: true
