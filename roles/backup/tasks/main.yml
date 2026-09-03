@@ -1,19 +1,20 @@
 ---
-- name: Install restic
-  ansible.builtin.apt:
-    name: restic
-    state: present
-    update_cache: true
-
-- name: Initialize restic repository
+- name: Install and initialize restic
+  become: true
   environment:
     RESTIC_REPOSITORY: "{{ vault_restic_repo_url }}"
     RESTIC_PASSWORD: "{{ vault_restic_password }}"
     AWS_ACCESS_KEY_ID: "{{ vault_aws_access_key }}"
     AWS_SECRET_ACCESS_KEY: "{{ vault_aws_secret_key }}"
   block:
+    - name: Install restic
+      ansible.builtin.apt:
+        name: restic
+        state: present
+        update_cache: true
+
     - name: Check if repository is initialized
-      command: restic cat config
+      ansible.builtin.command: restic cat config
       register: restic_check
       changed_when: false
       failed_when: false
@@ -22,41 +23,47 @@
       ansible.builtin.command: restic init
       when: restic_check.rc != 0
 
-- name: Deploy restic environment file
-  ansible.builtin.template:
-    src: restic-backup.env.j2
-    dest: /etc/restic-backup.env
-    owner: root
-    group: root
-    mode: "0600" ## only root can read this file
+- name: Configure restic backup job
+  become: true
+  block:
+    - name: Deploy restic environment file
+      ansible.builtin.template:
+        src: restic-backup.env.j2
+        dest: /etc/restic-backup.env
+        owner: root
+        group: root
+        mode: "0600" ## only root can read this file
 
-- name: Deploy restic backup script
-  ansible.builtin.template:
-    src: restic-backup.sh.j2
-    dest: /usr/local/bin/restic-backup.sh
-    owner: root
-    group: root
-    mode: "0700" ## only root can execute the script
+    - name: Deploy restic backup script
+      ansible.builtin.template:
+        src: restic-backup.sh.j2
+        dest: /usr/local/bin/restic-backup.sh
+        owner: root
+        group: root
+        mode: "0700" ## only root can execute the script
 
-- name: Deploy restic systemd service
-  ansible.builtin.template:
-    src: restic-backup.service.j2
-    dest: /etc/systemd/system/restic-backup.service
-    owner: root
-    group: root
-    mode: "0644"
+- name: Schedule restic backups
+  become: true
+  block:
+    - name: Deploy restic systemd service
+      ansible.builtin.template:
+        src: restic-backup.service.j2
+        dest: /etc/systemd/system/restic-backup.service
+        owner: root
+        group: root
+        mode: "0644"
 
-- name: Deploy restic systemd timer
-  ansible.builtin.template:
-    src: restic-backup.timer.j2
-    dest: /etc/systemd/system/restic-backup.timer
-    owner: root
-    group: root
-    mode: "0644"
+    - name: Deploy restic systemd timer
+      ansible.builtin.template:
+        src: restic-backup.timer.j2
+        dest: /etc/systemd/system/restic-backup.timer
+        owner: root
+        group: root
+        mode: "0644"
 
-- name: Enable and start backup timer
-  ansible.builtin.systemd:
-    name: restic-backup.timer
-    enabled: yes
-    state: started
-    daemon_reload: yes
+    - name: Enable and start backup timer
+      ansible.builtin.systemd:
+        name: restic-backup.timer
+        enabled: yes
+        state: started
+        daemon_reload: yes
