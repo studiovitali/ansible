@@ -1,0 +1,2 @@
+---
+sysadmin_user: "sysadmin"  # noqa: var-naming[no-role-prefix]

@@ -1,6 +1,4 @@
 ---
-## roles/base/defaults/main.yml
-
 base_timezone: "Europe/Zurich"
 base_packages:
   - curl
