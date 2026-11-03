@@ -1,2 +1,5 @@
-## Disable password authentication
+## Ansible managed
+
+PermitRootLogin {{ sshd_permit_root_login }}
 PasswordAuthentication no
+KbdInteractiveAuthentication no
