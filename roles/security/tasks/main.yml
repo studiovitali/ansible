@@ -13,12 +13,12 @@
     - name: Harden SSH configuration with drop-in template
       ansible.builtin.template:
         src: sshd.conf.j2
-        dest: /etc/ssh/sshd_config.d/sshd.conf
+        dest: /etc/ssh/sshd_config.d/10-sshd-hardening.conf
         owner: root
         group: root
         mode: "0644"
         validate: /usr/sbin/sshd -t -f %s
-      notify: Restart sshd
+      notify: Reload sshd
 
 - name: Enable fail2ban
   become: true
