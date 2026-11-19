@@ -20,7 +20,8 @@
     - name: Allow passwordless sudo
       ansible.builtin.copy:
         dest: /etc/sudoers.d/sudo-nopasswd
-        content: "{{ sysadmin_user }} ALL=(ALL) NOPASSWD: ALL\n"
+        content: |
+          {{ sysadmin_user }} ALL=(ALL) NOPASSWD: ALL
         mode: "0440"
         validate: /usr/sbin/visudo -cf %s
 
