@@ -3,7 +3,7 @@
 namespace: studiovitali
 name: ansible
 readme: README.md
-version: 0.1.3
+version: 0.1.4
 authors:
   - Studio Vitali
 description: Studio Ansible collection containing common roles
